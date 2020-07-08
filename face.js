@@ -4,9 +4,20 @@ const ctx = canvas.getContext('2d');
 const faceCanvas = document.querySelector('.face');
 const faceCtx = faceCanvas.getContext('2d');
 const faceDetector = new window.FaceDetector();
-const SIZE = 10;
-const SCALE = 1.5;
-// const optionsInputs = document.querySelectorAll('.controls input[type="range"]');
+const optionsInputs = document.querySelectorAll('.controls input[type="range"]');
+const options = {
+    SIZE: 10,
+    SCALE: 1.35,
+};
+
+function handleOption(event) {
+    const { value, name } = event.currentTarget;
+    options[name] = parseFloat(value);
+}
+
+optionsInputs.forEach(input => input.addEventListener('input', handleOption));
+
+
 
 async function populateVideo() {
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -21,11 +32,11 @@ async function populateVideo() {
     faceCanvas.height = video.videoHeight;
 }
 
-async function detect(){
-   const faces = await faceDetector.detect(video);
-   faces.forEach(drawFace);
+async function detect() {
+    const faces = await faceDetector.detect(video);
+    faces.forEach(drawFace);
     faces.forEach(censor);
-   requestAnimationFrame(detect);
+    requestAnimationFrame(detect);
 }
 function drawFace(face) {
     const { width, height, top, left } = face.boundingBox;
@@ -48,25 +59,25 @@ faceCtx.drawImage(
     // 4 draw args
     face.x,
     face.y,
-    SIZE,
-    SIZE,
+    options.SIZE,
+    options.SIZE,
 );
 // draw the small face back on, but scale up
 
-const width = face.width * SCALE;
-const height = face.height * SCALE;
+const width = face.width * options.SCALE;
+const height = face.height * options.SCALE;
 faceCtx.drawImage(
     faceCanvas, // source
     face.x,
     face.y,
-    SIZE,
-    SIZE,
+    options.SIZE,
+    options.SIZE,
 
     // Drawing args
-    face.x,
-    face.y,
-    face.width,
-    face.height,
+    face.x - (width - face.width) / 2,
+    face.y - (height - face.height) / 2,
+    width,
+    height
 )
 }
 
