@@ -14,8 +14,29 @@
       <canvas class="face"></canvas>
     </div>
     <style>
+      * {
+        box-sizing: border-box;
+      }
       body {
+        margin: 0;
         background: yellow;
+      }
+
+      .wrap {
+        position: relative;
+        min-height: 100vh;
+        display: grid;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .wrap > * {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .face {
+        position: absolute;
       }
     </style>
   </body>
